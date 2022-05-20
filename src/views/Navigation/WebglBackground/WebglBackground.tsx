@@ -5,9 +5,13 @@ import {
   Scene,
   AnimationMixer,
   Clock,
-
+  PointLightHelper,
   AmbientLightProbe,
   Fog,
+  PointLight,
+  Color,
+  // Color,
+  TextureLoader
   // Color,
 
 } from 'three'
@@ -71,18 +75,25 @@ const WebglBackground = (): JSX.Element => {
 
       mixer.current = new AnimationMixer(gltf.scene);
       mixer.current.clipAction(gltf.animations[0]).play();
-
+      // gltf.scene.position.set(20, 0, 15)
       scene.current.add(gltf.scene)
 
       gltf.scene.traverse((child:any) => {
-        console.log(child, 'child')
-        if (child.material) {
-          // child.material.emissive = new Color('#fff')
+        if (child.isMesh) {
+          if (child.material.isMeshStandardMaterial) {
+            console.log(child, 'child')
+            child.material.needsUpdate = true
+          }
         }
       });
     }, undefined, function (error) {
       console.error(error);
     });
+  }, [])
+
+  const addBg = useCallback(() => {
+    const texture = new TextureLoader().load('/bg1.jpg');
+    scene.current.background = texture
   }, [])
 
   useEffect(() => {
@@ -95,6 +106,21 @@ const WebglBackground = (): JSX.Element => {
       scene.current.add(directionalLight);
       scene.current.add(directionalLight1);
 
+      const pointLight = new PointLight(new Color('rgb(252, 107, 3)'), 1, 100, 3)
+      pointLight.position.set(-10, 6, 0);
+      scene.current.add(pointLight);
+
+      const pointLight2 = new PointLight(new Color('rgb(255, 255, 255)'), 0.1, 100, 1)
+      pointLight2.position.set(-20, 22, -20);
+
+      scene.current.add(pointLight2);
+
+      const sphereSize = 1;
+      const pointLightHelper = new PointLightHelper(pointLight, sphereSize);
+
+      const pointLightHelper2 = new PointLightHelper(pointLight2, sphereSize);
+      scene.current.add(pointLightHelper);
+      scene.current.add(pointLightHelper2);
       scene.current.fog = new Fog('#fff', 1, 150)
 
       // init render
@@ -105,8 +131,9 @@ const WebglBackground = (): JSX.Element => {
       flashGL()
       // 添加model
       addGltfModels()
+      addBg()
     }
-  }, [initRender, flashGL, addGltfModels, initCameraPos])
+  }, [initRender, flashGL, addGltfModels, initCameraPos, addBg])
   return (
     <div styleName='WebglBackground'>
       <canvas ref={canvasIns} className='canvas' />

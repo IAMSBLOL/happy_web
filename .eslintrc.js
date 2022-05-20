@@ -30,7 +30,7 @@ module.exports = {
   ],
   rules: {
     'multiline-ternary': 'off',
-
+    camelcase: 0,
     'no-empty': ['off', { allowEmptyCatch: true }],
     indent: [
       'error',
@@ -92,6 +92,7 @@ module.exports = {
       '@typescript-eslint'
     ],
     rules: {
+      camelcase: 0,
       'react/display-name': ['off', { ignoreTranspilerName: false }],
       indent: [
         'error',

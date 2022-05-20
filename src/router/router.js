@@ -15,6 +15,7 @@ function SuspenseFn (Comp) {
 
 const App = React.lazy(() => import('@src/views/container/app'));
 const Navigation = React.lazy(() => import('@src/views/Navigation'));
+const LoginWebgl = React.lazy(() => import('@src/views/LoginWebgl'));
 // const Home = React.lazy(() => import('@src/views/home'));
 // const HomeN = React.lazy(() => import('@src/views/home/one'));
 // const HomeT = React.lazy(() => import('@src/views/home/two'));
@@ -33,6 +34,11 @@ const routes = [
       {
         path: NAVIGATION,
         element: SuspenseFn(Navigation),
+
+      },
+      {
+        path: '/LoginWebgl',
+        element: SuspenseFn(LoginWebgl),
 
       },
       // {
