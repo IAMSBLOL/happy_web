@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useRoutes, Navigate } from 'react-router-dom';
 import {
-  NAVIGATION
+  NAVIGATION, CIRCULARMASK
 } from './pathNames'
 
 function SuspenseFn (Comp) {
@@ -16,6 +16,7 @@ function SuspenseFn (Comp) {
 const App = React.lazy(() => import('@src/views/container/app'));
 const Navigation = React.lazy(() => import('@src/views/Navigation'));
 const LoginWebgl = React.lazy(() => import('@src/views/LoginWebgl'));
+const CircularMask = React.lazy(() => import('@src/views/shader/CircularMask'));
 // const Home = React.lazy(() => import('@src/views/home'));
 // const HomeN = React.lazy(() => import('@src/views/home/one'));
 // const HomeT = React.lazy(() => import('@src/views/home/two'));
@@ -39,6 +40,11 @@ const routes = [
       {
         path: '/LoginWebgl',
         element: SuspenseFn(LoginWebgl),
+
+      },
+      {
+        path: CIRCULARMASK,
+        element: SuspenseFn(CircularMask),
 
       },
       // {

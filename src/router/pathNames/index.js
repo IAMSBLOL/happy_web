@@ -5,3 +5,4 @@ export const APP_HOME_TWO = '/app/home/two'
 export const APP_TEST = '/app/test'
 
 export const NAVIGATION = '/Navigation'
+export const CIRCULARMASK = '/CircularMask'

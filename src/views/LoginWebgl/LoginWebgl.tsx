@@ -17,12 +17,13 @@ import {
   Vector3,
   CubicBezierCurve3,
   BufferGeometry,
-  LineBasicMaterial
-
+  // LineBasicMaterial,
+  ShaderMaterial
 } from 'three'
 import { useCallback, useEffect, useRef } from 'react'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import shaders from './glsl';
 import './LoginWebgl.module.less'
 
 const { innerWidth, innerHeight } = window
@@ -38,6 +39,7 @@ const LoginWebgl = (): JSX.Element => {
   const scene = useRef<THREE.Scene>(new Scene())
 
   //   const mixer = useRef<THREE.AnimationMixer | null>()
+  const curveObject = useRef<any>(null)
 
   const gl_scene = useRef<any>(null)
 
@@ -62,6 +64,13 @@ const LoginWebgl = (): JSX.Element => {
   const flashGL = useCallback(() => {
     const controls = new OrbitControls(camera.current, canvasIns.current as HTMLCanvasElement);
     const renderCvs = () => {
+      if (curveObject.current) {
+        if (curveObject.current.material.uniforms.time.value > 0) {
+          curveObject.current.material.uniforms.time.value = -5
+        } else {
+          curveObject.current.material.uniforms.time.value += 0.05;
+        }
+      }
       controls.update();
       glRender.current?.render(scene.current, camera.current)
       requestAnimationFrame(renderCvs)
@@ -101,13 +110,41 @@ const LoginWebgl = (): JSX.Element => {
 
       const points = curve.getPoints(50);
       const geometry = new BufferGeometry().setFromPoints(points);
+      const colorf :any = {
+        r: 0.0,
+        g: 0.0,
+        b: 0.0
+      };
+      const colort:any = {
+        r: 1.0,
+        g: 1.0,
+        b: 1.0
+      };
+      const uniforms = {
+        time: { type: 'f', value: -5.0 },
+        size: { type: 'f', value: 2.0 },
+        colort: {
+          type: 'v3',
+          value: new Vector3(colort.r, colort.g, colort.b)
+        },
+        colorf: {
+          type: 'v3',
+          value: new Vector3(colorf.r, colorf.g, colorf.b)
+        }
+      };
 
-      const material = new LineBasicMaterial({ color: '0xff0000' });
+      const material = new ShaderMaterial({
+        uniforms: uniforms,
+
+        vertexShader: shaders.vertex.default,
+        fragmentShader: shaders.fragment.default,
+        transparent: true
+      });
 
       // Create the final object to add to the scene
-      const curveObject = new Line(geometry, material);
+      curveObject.current = new Line(geometry, material);
 
-      scene.current.add(curveObject)
+      scene.current.add(curveObject.current)
 
       // init render
       initRender()
