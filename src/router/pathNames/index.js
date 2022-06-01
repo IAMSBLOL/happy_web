@@ -6,3 +6,4 @@ export const APP_TEST = '/app/test'
 
 export const NAVIGATION = '/Navigation'
 export const CIRCULARMASK = '/CircularMask'
+export const NOISE = '/Noise'
