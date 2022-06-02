@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useRoutes, Navigate } from 'react-router-dom';
 import {
-  NAVIGATION, CIRCULARMASK, NOISE
+  NAVIGATION, CIRCULARMASK, NOISE, APP_HOME, APP_HOME_ONE, EARTH
 } from './pathNames'
 
 function SuspenseFn (Comp) {
@@ -18,9 +18,10 @@ const Navigation = React.lazy(() => import('@src/views/Navigation'));
 const LoginWebgl = React.lazy(() => import('@src/views/LoginWebgl'));
 const CircularMask = React.lazy(() => import('@src/views/shader/CircularMask'));
 const Noise = React.lazy(() => import('@src/views/shader/Noise'));
-// const Home = React.lazy(() => import('@src/views/home'));
-// const HomeN = React.lazy(() => import('@src/views/home/one'));
-// const HomeT = React.lazy(() => import('@src/views/home/two'));
+
+const Earth = React.lazy(() => import('@src/views/shader/Earth'));
+const Home = React.lazy(() => import('@src/views/home'));
+const HomeN = React.lazy(() => import('@src/views/home/one'));
 
 const routes = [
   {
@@ -53,20 +54,22 @@ const routes = [
         element: SuspenseFn(Noise),
 
       },
-      // {
-      //   path: APP_HOME,
-      //   element: SuspenseFn(Home),
-      //   children: [
-      //     {
-      //       path: APP_HOME_ONE,
-      //       element: SuspenseFn(HomeN),
-      //     },
-      //     {
-      //       path: APP_HOME_TWO,
-      //       element: SuspenseFn(HomeT),
-      //     },
-      //   ]
-      // },
+      {
+        path: EARTH,
+        element: SuspenseFn(Earth),
+
+      },
+      {
+        path: APP_HOME,
+        element: SuspenseFn(Home),
+        children: [
+          {
+            path: APP_HOME_ONE,
+            element: SuspenseFn(HomeN),
+          },
+
+        ]
+      },
     ]
   }
 ]

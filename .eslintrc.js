@@ -36,7 +36,7 @@ module.exports = {
       'error',
       2,
       {
-        ignoredNodes: ['JSXAttribute', 'JSXSpreadAttribute']
+        // ignoredNodes: ['JSXAttribute', 'JSXSpreadAttribute']
       }
     ],
     'react/jsx-indent': [0, 2],
@@ -98,7 +98,7 @@ module.exports = {
         'error',
         2,
         {
-          ignoredNodes: ['JSXAttribute', 'JSXSpreadAttribute']
+          // ignoredNodes: ['JSXAttribute', 'JSXSpreadAttribute']
         }
       ],
       'react/jsx-uses-react': 'off',

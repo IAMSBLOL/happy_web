@@ -13,7 +13,7 @@ import {
 //   Mesh
 } from 'three'
 import { useCallback, useEffect, useRef } from 'react'
-
+import * as dat from 'dat.gui';
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import shaders from './glsl';
 import './Noise.module.less'
@@ -134,6 +134,31 @@ const Noise = (): JSX.Element => {
         ampVel: 80.0,
       }
     }
+    function createGUI () {
+      const gui = new dat.GUI();
+      const camGUI = gui.addFolder('Camera');
+      // cam.add(, 'speed', 0.0, 30.00).listen();
+      camGUI.add(camera.current.position, 'z', 3, 20).name('Zoom').listen();
+      camGUI.add(options.perlin, 'vel', 0.000, 0.02).name('Velocity').listen();
+      // camGUI.open();
+
+      const mathGUI = gui.addFolder('Math Options');
+      mathGUI.add(options.spin, 'sinVel', 0.0, 0.50).name('Sine').listen();
+      mathGUI.add(options.spin, 'ampVel', 0.0, 90.00).name('Amplitude').listen();
+      // mathGUI.open();
+
+      const perlinGUI = gui.addFolder('Setup Perlin Noise');
+      perlinGUI.add(options.perlin, 'perlins', 1.0, 5.0).name('Size').step(1);
+      perlinGUI.add(options.perlin, 'speed', 0.00000, 0.00050).name('Speed').listen();
+      perlinGUI.add(options.perlin, 'decay', 0.0, 1.00).name('Decay').listen();
+      perlinGUI.add(options.perlin, 'waves', 0.0, 20.00).name('Waves').listen();
+      perlinGUI.add(options.perlin, 'fragment', true).name('Fragment');
+      perlinGUI.add(options.perlin, 'complex', 0.1, 1.00).name('Complex').listen();
+      perlinGUI.add(options.perlin, 'redhell', true).name('Electroflow');
+      perlinGUI.add(options.perlin, 'eqcolor', 0.0, 15.0).name('Hue').listen();
+      perlinGUI.open();
+    }
+    createGUI()
     console.log(object3d.current, ' object3d.current.mesh')
     function animation () {
       requestAnimationFrame(animation);

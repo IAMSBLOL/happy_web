@@ -72,12 +72,18 @@ module.exports = function (webpackEnv) {
             root: paths.appSrc,
           },
         },
+        // 这里只有less
         {
           loader: require.resolve(preProcessor),
           options: {
             sourceMap: true,
             lessOptions: {
-              javascriptEnabled: true
+              javascriptEnabled: true,
+              modifyVars: {
+                'primary-color': '#1DA57A',
+                'link-color': '#1DA57A',
+                'border-radius-base': '2px',
+              },
             }
           },
         }
