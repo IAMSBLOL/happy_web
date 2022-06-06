@@ -11,7 +11,7 @@ import {
   PointLight,
   Color,
   // Color,
-  TextureLoader
+  TextureLoader,
   // Color,
 
 } from 'three'
