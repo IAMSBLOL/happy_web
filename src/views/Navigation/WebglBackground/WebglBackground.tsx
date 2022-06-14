@@ -5,20 +5,27 @@ import {
   Scene,
   AnimationMixer,
   Clock,
-  PointLightHelper,
-  AmbientLightProbe,
+  // PointLightHelper,
+  // PointLight,
   Fog,
-  PointLight,
+
   Color,
   // Color,
-  TextureLoader,
-  // Color,
+  RectAreaLight,
 
+  // TextureLoader,
+  // Color,
+  Vector2
 } from 'three'
 import { useCallback, useEffect, useRef } from 'react'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 import './WebglBackground.module.less'
+
+let effectComposer :any = null
 
 const { innerWidth, innerHeight } = window
 
@@ -51,6 +58,23 @@ const WebglBackground = (): JSX.Element => {
     camera.current.position.setY(5)
     camera.current.position.setX(-10)
     camera.current.lookAt(0, 0, 0)
+
+    function getCameraViewSize () {
+      const vFOV = (camera.current.fov * Math.PI) / 180
+      const h = 2 * Math.tan(vFOV / 2) * Math.abs(camera.current.position.z)
+      const w = h * camera.current.aspect
+      return [w, h]
+    }
+
+    const [width, height] = getCameraViewSize()
+
+    if (glRender.current) {
+      const renderPass = new RenderPass(scene.current, camera.current)
+      const bloomPass = new UnrealBloomPass(new Vector2(width, height), 1.5, 0.5, 0.1)
+      effectComposer = new EffectComposer(glRender.current)
+      effectComposer.addPass(renderPass)
+      effectComposer.addPass(bloomPass)
+    }
   }, [])
 
   const flashGL = useCallback(() => {
@@ -59,7 +83,7 @@ const WebglBackground = (): JSX.Element => {
       glRender.current?.render(scene.current, camera.current)
 
       if (mixer.current) mixer.current.update(clock.getDelta());
-
+      effectComposer.render()
       controls.update();
       requestAnimationFrame(renderCvs)
     }
@@ -92,36 +116,21 @@ const WebglBackground = (): JSX.Element => {
   }, [])
 
   const addBg = useCallback(() => {
-    const texture = new TextureLoader().load('/bg1.jpg');
-    scene.current.background = texture
+    // const texture = new TextureLoader().load('/bg1.jpg');
+    // scene.current.background = texture
   }, [])
 
   useEffect(() => {
     if (canvasIns.current) {
-      const directionalLight = new AmbientLightProbe('#245266', 0.6);
-      const directionalLight1 = new AmbientLightProbe('#245266', 0.1);
-      directionalLight.position.setX(-1)
-      directionalLight.position.setY(0)
-      directionalLight.position.setZ(0)
-      scene.current.add(directionalLight);
-      scene.current.add(directionalLight1);
+      const width = 10;
+      const height = 10;
+      const intensity = 1;
+      const rectLight = new RectAreaLight(new Color('rgb(252, 107, 3)'), intensity, width, height);
+      rectLight.position.set(-10, 8, 0);
+      rectLight.lookAt(0, 0, 0);
+      scene.current.add(rectLight)
 
-      const pointLight = new PointLight(new Color('rgb(252, 107, 3)'), 1, 100, 3)
-      pointLight.position.set(-10, 6, 0);
-      scene.current.add(pointLight);
-
-      const pointLight2 = new PointLight(new Color('rgb(255, 255, 255)'), 0.1, 100, 1)
-      pointLight2.position.set(-20, 22, -20);
-
-      scene.current.add(pointLight2);
-
-      const sphereSize = 1;
-      const pointLightHelper = new PointLightHelper(pointLight, sphereSize);
-
-      const pointLightHelper2 = new PointLightHelper(pointLight2, sphereSize);
-      scene.current.add(pointLightHelper);
-      scene.current.add(pointLightHelper2);
-      scene.current.fog = new Fog('#fff', 1, 150)
+      scene.current.fog = new Fog('#fff', 0.5, 600)
 
       // init render
       initRender()
