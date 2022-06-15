@@ -122,15 +122,15 @@ const WebglBackground = (): JSX.Element => {
 
   useEffect(() => {
     if (canvasIns.current) {
-      const width = 10;
-      const height = 10;
-      const intensity = 1;
+      const width = 6;
+      const height = 6;
+      const intensity = 2;
       const rectLight = new RectAreaLight(new Color('rgb(252, 107, 3)'), intensity, width, height);
       rectLight.position.set(-10, 8, 0);
-      rectLight.lookAt(0, 0, 0);
+      rectLight.lookAt(0, 1, 0);
       scene.current.add(rectLight)
 
-      scene.current.fog = new Fog('#fff', 0.5, 600)
+      scene.current.fog = new Fog('#fafafa', 1, 200)
 
       // init render
       initRender()
