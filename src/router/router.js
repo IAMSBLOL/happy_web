@@ -19,6 +19,8 @@ const LoginWebgl = React.lazy(() => import('@src/views/LoginWebgl'));
 const CircularMask = React.lazy(() => import('@src/views/shader/CircularMask'));
 const Noise = React.lazy(() => import('@src/views/shader/Noise'));
 
+const TesorPage = React.lazy(() => import('@src/views/tensorflow/TesorPage'));
+
 const Earth = React.lazy(() => import('@src/views/shader/Earth'));
 const Home = React.lazy(() => import('@src/views/home'));
 const HomeN = React.lazy(() => import('@src/views/home/one'));
@@ -43,6 +45,10 @@ const routes = [
         path: '/LoginWebgl',
         element: SuspenseFn(LoginWebgl),
 
+      },
+      {
+        path: '/TesorPage',
+        element: SuspenseFn(TesorPage),
       },
       {
         path: CIRCULARMASK,
